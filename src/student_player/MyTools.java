@@ -15,7 +15,7 @@ public class MyTools {
             PentagoBoardState tempState = (PentagoBoardState) boardState.clone();
 
             tempState.processMove(move);
-            if (tempState.getWinner() == tempState.getTurnPlayer()) {
+            if (tempState.getWinner() == boardState.getTurnPlayer()) {
                 return move;
             }
         }
@@ -27,7 +27,7 @@ public class MyTools {
         int depth, int maximizingPlayer, PentagoMove move, int alpha, int beta) { 
 
         if (depth == 0 || boardState.gameOver()) {
-            return new AbstractMap.SimpleEntry<PentagoMove, Integer>(move, eval(boardState));
+            return new AbstractMap.SimpleEntry<PentagoMove, Integer>(move, eval(boardState,boardState.getTurnPlayer()));
         }
 
         int bestScore;
@@ -63,7 +63,12 @@ public class MyTools {
         }
     }
 
-    public static int eval (PentagoBoardState boardState) { 
-        return 0;
+    public static int eval (PentagoBoardState boardState, int currentPlayer) {
+        int utility = 0;
+
+        if (currentPlayer == PentagoBoardState.BLACK) {
+            utility = -utility;
+        }
+        return utility;
     }
 }

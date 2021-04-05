@@ -30,13 +30,13 @@ public class StudentPlayer extends PentagoPlayer {
             return winningMove;
         }
         
-        int depth = 5;
-        
-        Move bestMove = MyTools.minimax(boardState, depth, boardState.getTurnPlayer(), null, 
-            Integer.MIN_VALUE, Integer.MAX_VALUE).getKey();
+        // int depth = 5;
 
-        return bestMove;
+        // Move bestMove = MyTools.minimax(boardState, depth, boardState.getTurnPlayer(), null, 
+        //     Integer.MIN_VALUE, Integer.MAX_VALUE).getKey();
 
-        // return boardState.getRandomMove();
+        // return bestMove;
+
+        return boardState.getRandomMove();
     }
 }
