@@ -32,7 +32,7 @@ public class StudentPlayer extends PentagoPlayer {
             return winningMove;
         }
         
-        int depth = 1;
+        int depth = 2;
 
         Move bestMove = MyTools.minimax(boardState, depth, boardState.getTurnPlayer(), null, 
             Integer.MIN_VALUE, Integer.MAX_VALUE).getKey();

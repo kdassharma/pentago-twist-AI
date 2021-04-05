@@ -3,6 +3,7 @@ import java.util.AbstractMap;
 
 import pentago_twist.PentagoBoardState;
 import pentago_twist.PentagoMove;
+import boardgame.Board;
 
 public class MyTools {
     public static double getSomething() {
@@ -27,7 +28,7 @@ public class MyTools {
         int depth, int maximizingPlayer, PentagoMove move, int alpha, int beta) { 
 
         if (depth == 0 || boardState.gameOver()) {
-            return new AbstractMap.SimpleEntry<PentagoMove, Integer>(move, eval(boardState,boardState.getTurnPlayer(), alpha, beta));
+            return new AbstractMap.SimpleEntry<PentagoMove, Integer>(move, eval(boardState,maximizingPlayer, alpha, beta));
         }
 
         int bestScore;
@@ -66,19 +67,33 @@ public class MyTools {
     public static int eval (PentagoBoardState boardState, int currentPlayer, int alpha, int beta) {
         int utility = 0;
 
-        for (int x = 0; x<6; x++) {
-            for (int y = 0; y<6; y++) {
-                if (boardState.getPieceAt(x, y) == PentagoBoardState.Piece.WHITE) {
-                    utility = neighbourHeuristic(boardState, x, y);
+        if (boardState.getWinner() == Board.NOBODY) {
+            for (int x = 0; x<6; x++) {
+                for (int y = 0; y<6; y++) {
+                    if (boardState.getPieceAt(x, y) == PentagoBoardState.Piece.WHITE) {
+                        utility += neighbourHeuristic(boardState, x, y);
+                    }
                 }
+            }
+    
+            if (currentPlayer == PentagoBoardState.WHITE) {
+                utility = alpha + utility;
+            }
+            else { 
+                utility = beta - utility;
+            }
+        }
+        else { 
+            if (boardState.getWinner() == PentagoBoardState.WHITE) {
+                utility = Integer.MAX_VALUE;
+            }
+            else {
+                utility = Integer.MIN_VALUE;
             }
         }
 
-        if (currentPlayer == PentagoBoardState.BLACK) {
-            return beta - utility;
-        }
 
-        return alpha + utility;
+        return utility;
     }
 
     public static int neighbourHeuristic(PentagoBoardState boardState, int x, int y) { 
