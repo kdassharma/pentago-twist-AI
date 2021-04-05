@@ -58,6 +58,9 @@ public class MyTools {
                     alpha = bestScore;
                     bestMove = currentMove;
                 }
+                if (beta <= alpha) {
+                    break;
+                }
             }
             return new AbstractMap.SimpleEntry<PentagoMove, Integer>(bestMove, alpha);
         }
@@ -71,6 +74,9 @@ public class MyTools {
                 if (bestScore < beta) {
                     beta = bestScore;
                     bestMove = currentMove;
+                }
+                if (beta <= alpha) {
+                    break;
                 }
             }
             return new AbstractMap.SimpleEntry<PentagoMove, Integer>(bestMove, beta);
@@ -120,8 +126,7 @@ public class MyTools {
 
     
     /** 
-     * Simple heuristic which counts all adjacent (horizontal, vertical, diagonal) pieces of the same
-     * colour
+     * Simple heuristic which counts all adjacent (horizontal, vertical, diagonal) pieces 
      * @param boardState
      * @param x
      * @param y
