@@ -24,19 +24,24 @@ public class StudentPlayer extends PentagoPlayer {
      */
     public Move chooseMove(PentagoBoardState boardState) {
 
+        long startTime = System.nanoTime();
+
         Move winningMove = MyTools.getWinner(boardState);
 
         if (winningMove != null) { 
             return winningMove;
         }
         
-        // int depth = 5;
+        int depth = 1;
 
-        // Move bestMove = MyTools.minimax(boardState, depth, boardState.getTurnPlayer(), null, 
-        //     Integer.MIN_VALUE, Integer.MAX_VALUE).getKey();
+        Move bestMove = MyTools.minimax(boardState, depth, boardState.getTurnPlayer(), null, 
+            Integer.MIN_VALUE, Integer.MAX_VALUE).getKey();
+        
+        long stopTime = System.nanoTime();
+        System.out.println(stopTime - startTime);
 
-        // return bestMove;
+        return bestMove;
 
-        return boardState.getRandomMove();
+        // return boardState.getRandomMove();
     }
 }
