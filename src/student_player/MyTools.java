@@ -6,10 +6,12 @@ import pentago_twist.PentagoMove;
 import boardgame.Board;
 
 public class MyTools {
-    public static double getSomething() {
-        return Math.random();
-    }
-
+    
+    /** 
+     * Checks all legal moves to find the first winning move
+     * @param boardState State of the board
+     * @return PentagoMove winning move or null if none found
+     */
     public static PentagoMove getWinner(PentagoBoardState boardState) {
 
         for(PentagoMove move : boardState.getAllLegalMoves()) {
@@ -24,6 +26,17 @@ public class MyTools {
         return null;
     }
 
+    
+    /** 
+     * Minimax algorithm with white as the maximizingPlayer
+     * @param boardState State of the board
+     * @param depth How many levels of nodes to traverse
+     * @param maximizingPlayer 
+     * @param move
+     * @param alpha 
+     * @param beta
+     * @return SimpleEntry<PentagoMove, Integer> Represents a <move, score for that move>
+     */
     public static AbstractMap.SimpleEntry<PentagoMove, Integer> minimax(PentagoBoardState boardState, 
         int depth, int maximizingPlayer, PentagoMove move, int alpha, int beta) { 
 
@@ -64,6 +77,15 @@ public class MyTools {
         }
     }
 
+    
+    /** 
+     * Evaluation function for a given state
+     * @param boardState
+     * @param currentPlayer
+     * @param alpha
+     * @param beta
+     * @return int Utility of a given position
+     */
     public static int eval (PentagoBoardState boardState, int currentPlayer, int alpha, int beta) {
         int utility = 0;
 
@@ -96,6 +118,15 @@ public class MyTools {
         return utility;
     }
 
+    
+    /** 
+     * Simple heuristic which counts all adjacent (horizontal, vertical, diagonal) pieces of the same
+     * colour
+     * @param boardState
+     * @param x
+     * @param y
+     * @return int Utility
+     */
     public static int neighbourHeuristic(PentagoBoardState boardState, int x, int y) { 
         int utility = 0;
         
