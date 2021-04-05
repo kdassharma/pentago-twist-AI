@@ -6,13 +6,19 @@ import pentago_twist.PentagoMove;
 import boardgame.Board;
 
 public class MyTools {
+
+    public long startTime;
+
+    public MyTools(long startTime) {
+        this.startTime = startTime;
+    }
     
     /** 
      * Checks all legal moves to find the first winning move
      * @param boardState State of the board
      * @return PentagoMove winning move or null if none found
      */
-    public static PentagoMove getWinner(PentagoBoardState boardState) {
+    public PentagoMove getWinner(PentagoBoardState boardState) {
 
         for(PentagoMove move : boardState.getAllLegalMoves()) {
             PentagoBoardState tempState = (PentagoBoardState) boardState.clone();
@@ -37,10 +43,10 @@ public class MyTools {
      * @param beta
      * @return SimpleEntry<PentagoMove, Integer> Represents a <move, score for that move>
      */
-    public static AbstractMap.SimpleEntry<PentagoMove, Integer> minimax(PentagoBoardState boardState, 
+    public  AbstractMap.SimpleEntry<PentagoMove, Integer> minimax(PentagoBoardState boardState, 
         int depth, int maximizingPlayer, PentagoMove move, int alpha, int beta) { 
 
-        if (depth == 0 || boardState.gameOver()) {
+        if (depth == 0 || boardState.gameOver() || (System.nanoTime() - this.startTime > 2.5*Math.pow(10, 9))) {
             return new AbstractMap.SimpleEntry<PentagoMove, Integer>(move, eval(boardState,maximizingPlayer, alpha, beta));
         }
 
@@ -92,7 +98,7 @@ public class MyTools {
      * @param beta
      * @return int Utility of a given position
      */
-    public static int eval (PentagoBoardState boardState, int currentPlayer, int alpha, int beta) {
+    public  int eval (PentagoBoardState boardState, int currentPlayer, int alpha, int beta) {
         int utility = 0;
 
         if (boardState.getWinner() == Board.NOBODY) {
@@ -132,7 +138,7 @@ public class MyTools {
      * @param y
      * @return int Utility
      */
-    public static int neighbourHeuristic(PentagoBoardState boardState, int x, int y) { 
+    public  int neighbourHeuristic(PentagoBoardState boardState, int x, int y) { 
         int utility = 0;
         
         if (x+1 < 6 && boardState.getPieceAt(x+1, y) == PentagoBoardState.Piece.WHITE) {

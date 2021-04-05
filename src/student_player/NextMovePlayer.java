@@ -23,8 +23,11 @@ public class NextMovePlayer extends PentagoPlayer {
      * make decisions.
      */
     public Move chooseMove(PentagoBoardState boardState) {
+        
+        long startTime = System.nanoTime();
+        MyTools agent = new MyTools(startTime);
 
-        Move winningMove = MyTools.getWinner(boardState);
+        Move winningMove = agent.getWinner(boardState);
 
         if (winningMove != null) { 
             return winningMove;

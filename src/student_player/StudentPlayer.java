@@ -25,16 +25,17 @@ public class StudentPlayer extends PentagoPlayer {
     public Move chooseMove(PentagoBoardState boardState) {
 
         long startTime = System.nanoTime();
+        MyTools agent = new MyTools(startTime);
 
-        Move winningMove = MyTools.getWinner(boardState);
+        Move winningMove = agent.getWinner(boardState);
 
         if (winningMove != null) { 
             return winningMove;
         }
         
-        int depth = 2;
+        int depth = 3;
 
-        Move bestMove = MyTools.minimax(boardState, depth, boardState.getTurnPlayer(), null, 
+        Move bestMove = agent.minimax(boardState, depth, boardState.getTurnPlayer(), null, 
             Integer.MIN_VALUE, Integer.MAX_VALUE).getKey();
         
         long stopTime = System.nanoTime();
