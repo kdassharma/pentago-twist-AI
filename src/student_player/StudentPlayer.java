@@ -4,6 +4,7 @@ import boardgame.Move;
 
 import pentago_twist.PentagoPlayer;
 import pentago_twist.PentagoBoardState;
+import pentago_twist.PentagoMove;
 
 /** A player file submitted by a student. */
 public class StudentPlayer extends PentagoPlayer {
@@ -27,22 +28,25 @@ public class StudentPlayer extends PentagoPlayer {
         long startTime = System.nanoTime();
         MyTools agent = new MyTools(startTime);
 
+        if (boardState.getTurnNumber() < 4) {
+            return agent.openingStrategy(boardState);
+        }
+
         Move winningMove = agent.getWinner(boardState);
 
         if (winningMove != null) { 
             return winningMove;
         }
         
-        int depth = 3;
+        int depth = 2;
 
-        Move bestMove = agent.minimax(boardState, depth, boardState.getTurnPlayer(), null, 
+        Move bestMove = agent.minimax(boardState, depth, boardState.getTurnPlayer(), (PentagoMove) boardState.getRandomMove(), 
             Integer.MIN_VALUE, Integer.MAX_VALUE).getKey();
         
         long stopTime = System.nanoTime();
         System.out.println(stopTime - startTime);
+        // System.out.println(bestMove);
 
         return bestMove;
-
-        // return boardState.getRandomMove();
     }
 }

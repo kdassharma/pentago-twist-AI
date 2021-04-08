@@ -31,7 +31,7 @@ Allowing quadrants to be flipped/rotated introduces significant complexity and y
     | --- student_player (Package containing your agent)
     |      | --- StudentPlayer.java (The class you will implement your AI within)
     |      | --- MyTools.java (Placeholder for any extra code you may need)} \nonumber 
-    | --- pentago_swap (The package implementing all game logic)
+    | --- pentago_twist (The package implementing all game logic)
     |      | --- PentagoBoardPanel.java (Implements the GUI, can be ignored)
     |      | --- PentagoBoard.java (Used for server logic, can be ignored)
     |      | --- PentagoCoord.java (Simple class representing a board coordinate)

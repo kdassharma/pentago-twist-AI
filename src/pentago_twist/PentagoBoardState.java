@@ -388,4 +388,6 @@ public class PentagoBoardState extends BoardState {
                 System.out.println("Unknown error.");
         }
     }
+
+    public int getOpponent() { return (turnPlayer == WHITE) ? BLACK : WHITE; }
 }
