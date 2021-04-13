@@ -28,7 +28,7 @@ public class StudentPlayer extends PentagoPlayer {
         long startTime = System.nanoTime();
         MyTools agent = new MyTools(startTime);
 
-        // int depth = 3;
+        // int depth = 2;
         
         int depth = (boardState.getTurnNumber() <= 10) ? 2 :  3;
 

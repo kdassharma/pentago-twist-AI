@@ -83,16 +83,12 @@ public class MyTools {
             }
         }
 
-        if (depth == 0 || boardState.getWinner() != Board.NOBODY || (System.nanoTime() - this.startTime > 1.9*Math.pow(10, 9))) {
+        if (depth == 0 || boardState.getWinner() != Board.NOBODY || (System.nanoTime() - this.startTime > 1.95*Math.pow(10, 9))) {
             return new AbstractMap.SimpleEntry<PentagoMove, Integer>(move, eval(boardState,maximizingPlayer, alpha, beta));
         }
-
-        // if (depth == 0 || boardState.getWinner() != Board.NOBODY) {
-        //     return new AbstractMap.SimpleEntry<PentagoMove, Integer>(move, eval(boardState,maximizingPlayer, alpha, beta));
-        // }
-
+        
         int bestScore;
-        PentagoMove bestMove = (PentagoMove) boardState.getRandomMove(); 
+        PentagoMove bestMove = move; 
 
         if (maximizingPlayer == PentagoBoardState.WHITE) {
             for (PentagoMove currentMove : boardState.getAllLegalMoves()) {
