@@ -13,22 +13,35 @@ public class MyTools {
         this.startTime = startTime;
     }
 
-    public PentagoMove openingStrategy(PentagoBoardState boardState){
-            // Do turns numbers matter? (boardState.firstPlayer() == boardState.getTurnPlayer())
-            // Would the strategy matter based off first or second move
-            if (boardState.isLegal(new PentagoMove(1,1,0,0,boardState.getTurnPlayer()))) {
-                return new PentagoMove(1,1,0,0,boardState.getTurnPlayer());
+    public PentagoMove openingStrategy(PentagoBoardState boardState, int player){
+        PentagoMove move = null;
+
+        if (boardState.isLegal(new PentagoMove(1,1,0,0,boardState.getTurnPlayer()))) {
+            move = new PentagoMove(1,1,0,0,boardState.getTurnPlayer());
+        }
+        else if (boardState.isLegal(new PentagoMove(1,4,0,0,boardState.getTurnPlayer()))) {
+            move = new PentagoMove(1,4,0,0,boardState.getTurnPlayer());
+        }
+        else if (boardState.isLegal(new PentagoMove(4,1,0,0,boardState.getTurnPlayer()))) {
+            move = new PentagoMove(4,1,0,0,boardState.getTurnPlayer());
+        }
+        else if (boardState.isLegal(new PentagoMove(4,4,0,0,boardState.getTurnPlayer()))) {
+            move = new PentagoMove(4,4,0,0,boardState.getTurnPlayer());
+        }
+        if (move != null) {
+            PentagoBoardState tempState = (PentagoBoardState) boardState.clone();
+            tempState.processMove(move);
+
+            for (PentagoMove oppMove:tempState.getAllLegalMoves()) {
+                PentagoBoardState oppState = (PentagoBoardState) tempState.clone();
+                oppState.processMove(oppMove);
+                if (oppState.getWinner() == 1 - player) {
+                    return null;
+                }
             }
-            if (boardState.isLegal(new PentagoMove(1,4,0,0,boardState.getTurnPlayer()))) {
-                return new PentagoMove(1,4,0,0,boardState.getTurnPlayer());
-            }
-            if (boardState.isLegal(new PentagoMove(4,1,0,0,boardState.getTurnPlayer()))) {
-                return new PentagoMove(4,1,0,0,boardState.getTurnPlayer());
-            }
-            if (boardState.isLegal(new PentagoMove(4,4,0,0,boardState.getTurnPlayer()))) {
-                return new PentagoMove(4,4,0,0,boardState.getTurnPlayer());
-            }
-            return (PentagoMove) boardState.getRandomMove();
+        }
+
+        return move;
     }
     
     /** 
@@ -63,17 +76,19 @@ public class MyTools {
     public AbstractMap.SimpleEntry<PentagoMove, Integer> minimax(PentagoBoardState boardState, 
         int depth, int maximizingPlayer, PentagoMove move, int alpha, int beta) { 
 
-        if (depth == 0 || boardState.getWinner() != Board.NOBODY || (System.nanoTime() - this.startTime > 2.5*Math.pow(10, 9))) {
+        if (boardState.getTurnNumber() <= 4) {
+            PentagoMove openingMove = openingStrategy(boardState, boardState.getTurnPlayer());
+            if (openingMove != null) {
+                return new AbstractMap.SimpleEntry<PentagoMove, Integer>(openingMove, 0);
+            }
+        }
+
+        if (depth == 0 || boardState.getWinner() != Board.NOBODY || (System.nanoTime() - this.startTime > 2*Math.pow(10, 9))) {
             return new AbstractMap.SimpleEntry<PentagoMove, Integer>(move, eval(boardState,maximizingPlayer, alpha, beta));
         }
 
-        // if (depth == 0 || boardState.getWinner() != Board.NOBODY) {
-        //     return new AbstractMap.SimpleEntry<PentagoMove, Integer>(move, eval(boardState,maximizingPlayer, alpha, beta));
-        // }
-
         int bestScore;
-        PentagoMove bestMove = (PentagoMove) boardState.getRandomMove(); // Check wether this should just be move
-        // PentagoMove bestMove = null;
+        PentagoMove bestMove = (PentagoMove) boardState.getRandomMove(); 
 
         if (maximizingPlayer == PentagoBoardState.WHITE) {
             for (PentagoMove currentMove : boardState.getAllLegalMoves()) {
@@ -128,6 +143,9 @@ public class MyTools {
                 for (int y = 0; y<6; y++) {
                     if (boardState.getPieceAt(x, y) == PentagoBoardState.Piece.WHITE) {
                         utility += neighbourHeuristic(boardState, x, y);
+                        // utility += checkDiagonals(boardState, x, y);
+                        // utility += checkVerticals(boardState, x, y);
+                        // utility += checkHorizontals(boardState, x, y);
                     }
                 }
             }
@@ -164,30 +182,133 @@ public class MyTools {
         int utility = 0;
         
         if (x+1 < 6 && boardState.getPieceAt(x+1, y) == PentagoBoardState.Piece.WHITE) {
-            utility +=1;
+            utility +=2;
         }
         if (x-1 >= 0 && boardState.getPieceAt(x-1, y) == PentagoBoardState.Piece.WHITE) {
-            utility +=1;
+            utility +=2;
         }
         if (y+1 < 6 && boardState.getPieceAt(x, y+1) == PentagoBoardState.Piece.WHITE) {
-            utility +=1;
+            utility +=2;
         }
         if (y-1 >= 0 && boardState.getPieceAt(x, y-1) == PentagoBoardState.Piece.WHITE) {
-            utility +=1;
+            utility +=2;
         }
         if (x+1 < 6 && y+1 < 6 && boardState.getPieceAt(x+1, y+1) == PentagoBoardState.Piece.WHITE) {
-            utility +=1;
+            utility +=2;
         }
         if (x-1 >= 0 && y-1 >= 0  && boardState.getPieceAt(x-1, y-1) == PentagoBoardState.Piece.WHITE) {
-            utility +=1;
+            utility +=2;
         }
         if (x+1 < 6 && y-1 >= 0 && boardState.getPieceAt(x+1, y-1) == PentagoBoardState.Piece.WHITE) {
-            utility +=1;
+            utility +=2;
         }
         if (x-1 >= 0 && y+1 < 6 && boardState.getPieceAt(x-1, y+1) == PentagoBoardState.Piece.WHITE) {
-            utility +=1;
+            utility +=2;
         }
         return utility;
+    }
+
+    
+    public int checkVerticals(PentagoBoardState boardState, int x, int y) {
+        int utility = 0;
+
+        // Vetical down
+        for (int i = y+1; i<6; i++) {
+            if (boardState.getPieceAt(x, i) != PentagoBoardState.Piece.WHITE) { 
+                break;
+            }
+            utility += 1; 
+        }
+
+        // Vertical up
+        for (int i = y-1; i>=0; i--) {
+            if (boardState.getPieceAt(x, i) != PentagoBoardState.Piece.WHITE) {
+                break;
+            }
+            utility += 1; 
+        }
+        
+        return utility; 
+    }
+
+    public int checkHorizontals(PentagoBoardState boardState, int x, int y) {
+        int utility = 0;
+
+        // Horizontal right
+        for (int i = x+1; i<6; i++) {
+            if (boardState.getPieceAt(i, y) != PentagoBoardState.Piece.WHITE) {
+                break;
+            }
+            utility += 1; 
+        }
+
+        // Horizontal left
+        for (int i = x-1; i>=0; i--) {
+            if (boardState.getPieceAt(i, y) != PentagoBoardState.Piece.WHITE) {
+                break;
+            }
+            utility += 1; 
+        }
+        
+        return utility; 
+    }
+
+    public int checkDiagonals(PentagoBoardState boardState, int x, int y) {
+        int utility = 0;
+
+        int i = x+1;
+        int j = y+1;
+
+        // Down right 
+        while (i < 6 && j < 6) {
+            if (boardState.getPieceAt(i, j) != PentagoBoardState.Piece.WHITE) {
+                break;
+            }
+            utility += 1;
+            i++;
+            j++;
+        }
+
+        i = x-1;
+        j = y-1;
+
+        // Up left
+        while (i >= 0 && j >= 0) {
+            if (boardState.getPieceAt(i, j) != PentagoBoardState.Piece.WHITE) {
+                break;
+            }
+            utility += 1;
+            i--;
+            j--;
+        }
+
+        i = x+1;
+        j = y-1;
+
+        // up right
+        while (i < 6 && j >= 0) {
+            if (boardState.getPieceAt(i, j) != PentagoBoardState.Piece.WHITE) {
+                break;
+            }
+            utility += 1;
+            i++;
+            j--;
+        }
+
+        i = x-1;
+        j = y+1;
+
+        // Down left
+        while (i >= 0 && j < 6) {
+            if (boardState.getPieceAt(i, j) != PentagoBoardState.Piece.WHITE) {
+                break;
+            }
+            utility += 1;
+            i--;
+            j++;
+        }
+
+        return utility; 
     }
 
     // public ArrayList<PentagoMove> cutMoves(PentagoBoardState boardState){
@@ -201,35 +322,5 @@ public class MyTools {
     //     }
         
     //     return moves;
-    // }
-
-    // public boolean checkNeighbours(PentagoBoardState boardState, int x, int y) {
-
-    //     if (x+1 < 6 && boardState.getPieceAt(x+1, y) == PentagoBoardState.Piece.WHITE) {
-    //         return true;
-    //     }
-    //     if (x-1 >= 0 && boardState.getPieceAt(x-1, y) == PentagoBoardState.Piece.WHITE) {
-    //         return true;
-    //     }
-    //     if (y+1 < 6 && boardState.getPieceAt(x, y+1) == PentagoBoardState.Piece.WHITE) {
-    //         return true;
-    //     }
-    //     if (y-1 >= 0 && boardState.getPieceAt(x, y-1) == PentagoBoardState.Piece.WHITE) {
-    //         return true;
-    //     }
-    //     if (x+1 < 6 && y+1 < 6 && boardState.getPieceAt(x+1, y+1) == PentagoBoardState.Piece.WHITE) {
-    //         return true;
-    //     }
-    //     if (x-1 >= 0 && y-1 >= 0  && boardState.getPieceAt(x-1, y-1) == PentagoBoardState.Piece.WHITE) {
-    //         return true;
-    //     }
-    //     if (x+1 < 6 && y-1 >= 0 && boardState.getPieceAt(x+1, y-1) == PentagoBoardState.Piece.WHITE) {
-    //         return true;
-    //     }
-    //     if (x-1 >= 0 && y+1 < 6 && boardState.getPieceAt(x-1, y+1) == PentagoBoardState.Piece.WHITE) {
-    //         return true;
-    //     }
-        
-    //     return false;
     // }
 }
