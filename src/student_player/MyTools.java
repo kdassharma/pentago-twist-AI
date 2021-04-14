@@ -86,7 +86,7 @@ public class MyTools {
         if (depth == 0 || boardState.getWinner() != Board.NOBODY || (System.nanoTime() - this.startTime > 1.95*Math.pow(10, 9))) {
             return new AbstractMap.SimpleEntry<PentagoMove, Integer>(move, eval(boardState,maximizingPlayer, alpha, beta));
         }
-        
+
         int bestScore;
         PentagoMove bestMove = move; 
 
@@ -310,17 +310,4 @@ public class MyTools {
 
         return utility; 
     }
-
-    // public ArrayList<PentagoMove> cutMoves(PentagoBoardState boardState){
-    //     ArrayList<PentagoMove> moves = boardState.getAllLegalMoves();
-
-    //     for (PentagoMove move : moves) {
-    //         PentagoCoord coord = move.getMoveCoord();
-    //         if (!checkNeighbours(boardState, coord.getX(), coord.getY())) {
-    //             moves.remove(move);
-    //         }
-    //     }
-        
-    //     return moves;
-    // }
 }
